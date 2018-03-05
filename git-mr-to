@@ -1,0 +1,105 @@
+#!/bin/bash
+
+fatal()
+{
+    printf 1>&2 'fatal: %s\n' "$@"
+}
+
+die()
+{
+    fatal "$@"
+    exit 1
+}
+
+usage()
+{
+    printf 'usage: git mr-to [remote [destination [source]]]\n'
+}
+
+# A provider receives three arguments:
+#
+# 1: the complete project URL
+# 2: the unqualified name of the source branch to merge
+# 3: the unqualified name of the destination branch to merge into
+#
+# It produces on standard output the complete URL with which to create a new
+# merge request.
+provider_bitbucket()
+{
+    printf '%s/pull-requests/new?source=%s&dest=%s' "$1" "$2" "$3"
+}
+
+provider_github()
+{
+    printf '%s/compare/%s...%s?expand=1' "$1" "$3" "$2"
+}
+
+provider_gitlab()
+{
+    printf \
+        '%s/merge_requests/new?merge_request%%5Bsource_branch%%5D=%s&merge_request%%5Btarget_branch%%5D=%s' \
+        "$1" "$2" "$3"
+}
+
+https_url_of_remote()
+{
+    local remote_url
+
+    remote_url="$(git remote get-url "$1")" || exit
+
+    if [[ $remote_url = git@* ]]
+    then
+        # Replace SCP-syntax colon with slash
+        remote_url="${remote_url/://}"
+
+        # Replace optional leading git@ with https://
+        remote_url="${remote_url/#git@/https:\/\/}"
+    fi
+
+    # Strip optional trailing .git
+    printf '%s' "${remote_url/%\.git/}"
+}
+
+main()
+{
+    local remote dest src remote_url
+
+    remote="${1:-$(git remote)}"
+    dest="${2:-master}"
+    src="${3:-$(git rev-parse --abbrev-ref HEAD)}"
+
+    if [[ -z $remote ]]
+    then
+        fatal "no remote configured or supplied"
+        usage 1>&2
+        exit 1
+    fi
+
+    if [[ "$remote" == *$'\n'* ]]
+    then
+        die "ambiguous remote: '${remote/$'\n'/ }'"
+    fi
+
+    remote_url="$(https_url_of_remote "$remote")" || exit
+
+    case "$remote_url" in
+        *gitlab*)
+            provider=provider_gitlab
+            ;;
+        *github*)
+            provider=provider_github
+            ;;
+        *bitbucket*)
+            provider=provider_bitbucket
+            ;;
+    esac
+
+    if [[ -z $provider ]]
+    then
+        die "no provider for '$remote_url'"
+    fi
+
+    xdg-open "$($provider "$remote_url" "$src" "$dest")"
+}
+
+main "$@"
