@@ -9,5 +9,4 @@ manpage:
   image: asciidoctor/docker-asciidoctor:latest
   stage: test
   script:
-    - asciidoctor --backend manpage --doctype manpage doc/git-mr-to.1.adoc
-    - test -f doc/git-mr-to.1
+    - make doc DIST_VERSION=HEAD

@@ -64,7 +64,9 @@ manually.
 ## Installation
 
 Place `git-mr-to` somewhere in your `$PATH`. Git will automatically detect the
-executable as a command and provide it as `git mr-to`.
+executable as a command and provide it as `git mr-to`. You can do this with
+`make install`, optionally providing `PREFIX=<path>` to override the default
+installation prefix of `$HOME/.local`.
 
 For bash completion, source `completion.sh` from `$HOME/.bash_completion`:
 
