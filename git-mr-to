@@ -16,11 +16,12 @@ usage()
     printf 'usage: git mr-to [remote [destination [source]]]\n'
 }
 
-# A provider receives three arguments:
+# A provider receives three or more arguments:
 #
-# 1: the complete project URL
+# 1: the complete destination project URL
 # 2: the unqualified name of the source branch to merge
 # 3: the unqualified name of the destination branch to merge into
+# 4: optionally, the project namespace of the fork submitting the change
 #
 # It produces on standard output the complete URL with which to create a new
 # merge request.
@@ -31,7 +32,7 @@ provider_bitbucket()
 
 provider_github()
 {
-    printf '%s/compare/%s...%s?expand=1' "$1" "$3" "$2"
+    printf '%s/compare/%s...%s:%s?expand=1' "$1" "$3" "$4" "$2"
 }
 
 provider_gitlab()
@@ -45,7 +46,7 @@ https_url_of_remote()
 {
     local remote_url
 
-    remote_url="$(git remote get-url "$1")" || exit
+    remote_url="$(git remote get-url "$1")" || return
 
     if [[ $remote_url = git@* ]]
     then
@@ -60,9 +61,33 @@ https_url_of_remote()
     printf '%s' "${remote_url/%\.git/}"
 }
 
+infer_namespace_of_fork()
+{
+    local remote namespace
+
+    # If there is only one configured remote, use that. It is unlikely but
+    # possible that this remote is not named "origin".
+    remote="$(git remote)"
+
+    # But if there is more than one remote, assume one of them is named "origin"
+    # and that that is the downstream fork submitting the change. If either of
+    # those assumptions are wrong there is nothing we can do to meaningfully
+    # guess the correct downstream fork.
+    [[ "$remote" == *$'\n'* ]] && remote=origin
+
+    namespace="$(git remote get-url "$remote" 2>/dev/null)" || return
+
+    # All providers happen to have project namespaces of the form
+    # (basename (dirname project)), independently of protocol.
+    namespace="${namespace%/*}"
+    namespace="${namespace##*[/:]}"
+
+    printf '%s' "$namespace"
+}
+
 main()
 {
-    local remote dest src remote_url
+    local remote dest src remote_url namespace
 
     remote="${1:-$(git remote)}"
     dest="${2:-master}"
@@ -99,7 +124,10 @@ main()
         die "no provider for '$remote_url'"
     fi
 
-    xdg-open "$($provider "$remote_url" "$src" "$dest")"
+    namespace="$(infer_namespace_of_fork)" || printf 1>&2 '%s\n' \
+        "warn: ambiguous remote with no 'origin', could not infer downstream fork namespace"
+
+    xdg-open "$($provider "$remote_url" "$src" "$dest" "$namespace")"
 }
 
 main "$@"
