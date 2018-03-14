@@ -1,5 +1,13 @@
-test:
+shellcheck:
   image: koalaman/shellcheck-alpine:latest
+  stage: test
   script:
     - shellcheck --shell sh completion.sh
     - shellcheck git-mr-to
+
+manpage:
+  image: asciidoctor/docker-asciidoctor:latest
+  stage: test
+  script:
+    - asciidoctor --backend manpage --doctype manpage doc/git-mr-to.1.adoc
+    - test -f doc/git-mr-to.1
