@@ -82,7 +82,11 @@ The program's behavior can be altered with an environment variable:
 
     When the environment variable *GIT_MR_TO_BROWSER* is set, it names a
     command with which to open the merge request Web page instead of the
-    default command of *xdg-open*(1).
+    default command of *git-web\--browse*(1).
++
+*git-web\--browse*(1) tries to either open a new tab in an existing browser or
+start a new browser. Refer to its manual page for instructions on how to
+configure its default browser.
 
 == EXAMPLES
 
@@ -100,11 +104,14 @@ towards the _staging_ branch of the remote named _upstream_:
 $ git mr-to upstream staging frobnicate-discombobulator
 ----
 
-Open the merge request in *lynx*(1) (probably not recommended...), passing the
-_-vikeys_ option:
+
+Open the merge request in *lynx*(1) (probably not recommended...) by overriding
+*git-web--browse*(1)'s default browser with the _--browser_ option, by
+overriding *git mr-to*'s default browser command via *GIT_MR_TO_BROWSER* (yes,
+this is redundant):
 
 ----
-$ GIT_MR_TO_BROWSER="lynx -vikeys" git mr-to
+$ GIT_MR_TO_BROWSER="git web--browse --browser=lynx" git mr-to
 ----
 
 == AUTHOR

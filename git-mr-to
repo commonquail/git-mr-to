@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-GIT_MR_TO_BROWSER="${GIT_MR_TO_BROWSER:-xdg-open}"
+GIT_MR_TO_BROWSER="${GIT_MR_TO_BROWSER:-git web--browse}"
 
 fatal()
 {
