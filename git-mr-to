@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+GIT_MR_TO_BROWSER="${GIT_MR_TO_BROWSER:-xdg-open}"
+
 fatal()
 {
     printf 1>&2 'fatal: %s\n' "$@"
@@ -127,7 +129,7 @@ main()
     namespace="$(infer_namespace_of_fork)" || printf 1>&2 '%s\n' \
         "warn: ambiguous remote with no 'origin', could not infer downstream fork namespace"
 
-    xdg-open "$($provider "$remote_url" "$src" "$dest" "$namespace")"
+    $GIT_MR_TO_BROWSER "$($provider "$remote_url" "$src" "$dest" "$namespace")"
 }
 
 main "$@"

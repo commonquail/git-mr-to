@@ -74,6 +74,16 @@ which are named _origin_, *git mr-to* will not be able to infer the
 upstream/downstream relationship. In that case it will issue a warning but
 proceed, allowing the user to configure the merge request manually.
 
+== ENVIRONMENT VARIABLES
+
+The program's behavior can be altered with an environment variable:
+
+*GIT_MR_TO_BROWSER*::
+
+    When the environment variable *GIT_MR_TO_BROWSER* is set, it names a
+    command with which to open the merge request Web page instead of the
+    default command of *xdg-open*(1).
+
 == EXAMPLES
 
 Create a merge request from the _current branch_ towards _master_ of the sole
@@ -88,6 +98,13 @@ towards the _staging_ branch of the remote named _upstream_:
 
 ----
 $ git mr-to upstream staging frobnicate-discombobulator
+----
+
+Open the merge request in *lynx*(1) (probably not recommended...), passing the
+_-vikeys_ option:
+
+----
+$ GIT_MR_TO_BROWSER="lynx -vikeys" git mr-to
 ----
 
 == AUTHOR

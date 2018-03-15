@@ -18,6 +18,7 @@ See [Provider support](#provider-support) for details.
 
 * [Usage](#usage)
     * [Provider support](#provider-support)
+    * [Browser choice](#browser-choice)
 * [Installation](#installation)
 * [The name](#the-name)
 * [License](#license)
@@ -60,6 +61,17 @@ remotes, none of which are named `origin`, `git mr-to` will not be able to
 infer the upstream/downstream relationship. In that case it will issue
 a warning but proceed, allowing the user to configure the merge request
 manually.
+
+### Browser choice
+
+By default `git mr-to` opens the Web page using `xdg-open(1)`. This can be
+overridden using the environment variable `GIT_MR_TO_BROWSER`. For instance,
+the following example merely prints out the merge request URL, in a technically
+correct but obtuse way for demonstrational purpose:
+
+```sh
+$ GIT_MR_TO_BROWSER="printf %s\n" git mr-to
+```
 
 ## Installation
 
