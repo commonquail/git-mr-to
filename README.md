@@ -64,8 +64,8 @@ manually.
 
 ### Browser choice
 
-By default `git mr-to` opens the Web page using `xdg-open(1)`. This can be
-overridden using the environment variable `GIT_MR_TO_BROWSER`. For instance,
+By default `git mr-to` opens the Web page using `git-web--browse(1)`. This can
+be overridden using the environment variable `GIT_MR_TO_BROWSER`. For instance,
 the following example merely prints out the merge request URL, in a technically
 correct but obtuse way for demonstrational purpose:
 
