@@ -4,6 +4,7 @@ shellcheck:
   script:
     - shellcheck --shell sh completion.sh
     - shellcheck git-mr-to
+    - shellcheck --shell bash t/helper.bash
 
 manpage:
   image: asciidoctor/docker-asciidoctor:latest
