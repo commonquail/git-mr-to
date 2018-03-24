@@ -50,6 +50,10 @@ $(dist_tar_name).gz: $(manpage)
 
 	@mkdir -p $(dist_name)/doc
 	@cp $(manpage) $(dist_name)/doc
+	@# git-archive does not include .git directory and some targets don't
+	@# work without it. Those targets fortunately don't matter for package
+	@# distribution so strip them.
+	sed '/^check:/,$$ d' Makefile > $(dist_name)/Makefile
 
 	tar rf $(dist_tar_name) $(dist_name)
 	@$(RM) -r $(dist_name)
