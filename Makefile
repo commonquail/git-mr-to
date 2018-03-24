@@ -1,6 +1,6 @@
 .SUFFIXES:
 
-.PHONY: all check clean dist distclean doc install uninstall
+.PHONY: all check clean dist distclean doc install release uninstall
 
 PREFIX ?= $(HOME)/.local
 dest = $(DESTDIR)$(PREFIX)
@@ -57,3 +57,10 @@ $(dist_tar_name).gz: $(manpage)
 
 distclean:
 	$(RM) $(dist_tar_name)*
+
+release:
+	test -n "$(v)"
+	sed -i "s/^\(:man source: git mr-to\).\+$$/\1 $(v)/" doc/git-mr-to.1.adoc
+	git add -p doc/git-mr-to.1.adoc
+	git commit -m "git-mr-to $(v)"
+	git tag -a -m "git-mr-to $(v)" "v$(v)"
