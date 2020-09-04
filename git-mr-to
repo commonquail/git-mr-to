@@ -59,6 +59,9 @@ https_url_of_remote()
         remote_url="${remote_url/#git@/https:\/\/}"
     fi
 
+    # Is there still a user name before the domain? Remove that.
+    remote_url="${remote_url/:\/\/*@/:\/\/}"
+
     # Strip optional trailing .git
     printf '%s' "${remote_url/%\.git/}"
 }

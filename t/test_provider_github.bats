@@ -29,6 +29,15 @@ load helper
     test "$output" = 'https://github.com/namespace/project/compare/foo...namespace:bar?expand=1'
 }
 
+@test 'GitHub HTTPS strips optional credentials-part user' {
+    add_remote_with_provider origin baz@github.com
+
+    run git mr-to origin foo bar
+
+    test "$status" -eq 0
+    grep 'https://github.com/' <<< "$output"
+}
+
 @test 'GitHub inter-project' {
     add_remote_with_provider --namespace base upstream github.com
     add_remote_with_provider --namespace fork origin   github.com
