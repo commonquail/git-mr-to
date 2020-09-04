@@ -3,7 +3,7 @@
 load helper
 
 @test 'GitLab SSH' {
-    add_remote_with_provider origin gitlab.com
+    add_remote_with_provider --ssh origin gitlab.com
 
     run git mr-to origin foo bar
 
