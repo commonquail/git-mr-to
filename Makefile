@@ -18,9 +18,6 @@ doc: $(manpage)
 %.1: %.1.adoc
 	$(ASCIIDOC) --backend manpage --doctype manpage $<
 	test -f $@
-	@# Clean dangling em-dash semicolons.
-	@# asciidoctor/asciidoctor#2604
-	@sed -i 's|\(\\(em\);|\1|g' $@
 
 install: $(manpage)
 	install -d $(bindir) $(mandir)
