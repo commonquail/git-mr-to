@@ -12,7 +12,7 @@ load helper
 }
 
 @test 'GitHub SSH' {
-    add_remote_with_provider origin github.com
+    add_remote_with_provider --ssh origin github.com
 
     run git mr-to origin foo bar
 

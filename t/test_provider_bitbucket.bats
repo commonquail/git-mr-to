@@ -3,7 +3,7 @@
 load helper
 
 @test 'Bitbucket SSH' {
-    add_remote_with_provider origin bitbucket.org
+    add_remote_with_provider --ssh origin bitbucket.org
 
     run git mr-to origin foo bar
 
