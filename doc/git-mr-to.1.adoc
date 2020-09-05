@@ -1,5 +1,5 @@
 = git-mr-to(1)
-:man source: git mr-to 1.0.1
+:man source: git mr-to 1.1.0
 :man manual: git mr-to
 :uri-flow: https://scottchacon.com/2011/08/31/github-flow.html
 
