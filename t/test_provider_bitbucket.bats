@@ -20,6 +20,15 @@ load helper
     test "$output" = 'https://bitbucket.org/namespace/project/pull-requests/new?source=bar&dest=foo'
 }
 
+@test 'Bitbucket HTTPS strips optional credentials-part user' {
+    add_remote_with_provider origin baz@bitbucket.org
+
+    run git mr-to origin foo bar
+
+    test "$status" -eq 0
+    grep 'https://bitbucket.org/' <<< "$output"
+}
+
 @test 'Bitbucket inter-project' {
     skip 'format of destination project specification unknown'
 }
