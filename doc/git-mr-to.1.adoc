@@ -16,7 +16,7 @@ git-mr-to - Open Web browser at URL to create new merge request
 *git mr-to* opens a Web browser at the URL for creating a new _merge request_.
 It is optimized for workflows where topic branches are merged directly to the
 _master_ branch, such as the popular _GitHub
-Flow_{empty}footnoteref:[github-flow,{uri-flow}].
+Flow_{empty}footnote:github-flow[{uri-flow}].
 
 *git mr-to* has varying degrees of support for, in alphabetical order, the
 following repository hosting services:
