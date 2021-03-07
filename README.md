@@ -65,12 +65,20 @@ manually.
 ### Browser choice
 
 By default `git mr-to` opens the Web page using `git-web--browse(1)`. This can
-be overridden using the environment variable `GIT_MR_TO_BROWSER`. For instance,
-the following example merely prints out the merge request URL, in a technically
-correct but obtuse way for demonstrational purpose:
+be overridden using the environment variable `GIT_MR_TO_BROWSER`.
+
+The following example merely prints out the merge request URL, in a technically
+correct but obtuse way for demonstrational purposes:
 
 ```sh
 $ GIT_MR_TO_BROWSER="printf %s\n" git mr-to
+```
+
+This example instead opens the URL in an incognito browsing instance of
+Chromium (sadly, Firefox's `-private` counterpart works unreliably):
+
+```sh
+$ GIT_MR_TO_BROWSER="chromium --incognito" git mr-to
 ```
 
 ## Installation
