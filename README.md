@@ -98,7 +98,7 @@ Bitbucket offer.
 
 ## License
 
-Copyright &copy; 2018-2020 Mikkel Kjeldsen
+Copyright &copy; 2018-2021 Mikkel Kjeldsen
 
 This software is released under the GPLv2, on account of using components from
 the Git project v2.16.2 released under the GPLv2 [[git-license]].
