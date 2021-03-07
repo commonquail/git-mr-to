@@ -80,10 +80,12 @@ executable as a command and provide it as `git mr-to`. You can do this with
 `make install`, optionally providing `PREFIX=<path>` to override the default
 installation prefix of `$HOME/.local`.
 
-For bash completion, source `completion.sh` from `$HOME/.bash_completion`:
+The `completion.sh` script provides Bash completion. To install, copy it to
+your completion user directory's `completions/` directory; default
+`$HOME/.local/share/bash-completion/completions/`:
 
 ```sh
-source $HOME/src/git-mr-to/completion.sh
+cp completion.sh $HOME/.local/share/bash-completion/completions/git-mr-to
 ```
 
 ## The name
