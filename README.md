@@ -65,12 +65,20 @@ manually.
 ### Browser choice
 
 By default `git mr-to` opens the Web page using `git-web--browse(1)`. This can
-be overridden using the environment variable `GIT_MR_TO_BROWSER`. For instance,
-the following example merely prints out the merge request URL, in a technically
-correct but obtuse way for demonstrational purpose:
+be overridden using the environment variable `GIT_MR_TO_BROWSER`.
+
+The following example merely prints out the merge request URL, in a technically
+correct but obtuse way for demonstrational purposes:
 
 ```sh
 $ GIT_MR_TO_BROWSER="printf %s\n" git mr-to
+```
+
+This example instead opens the URL in an incognito browsing instance of
+Chromium (sadly, Firefox's `-private` counterpart works unreliably):
+
+```sh
+$ GIT_MR_TO_BROWSER="chromium --incognito" git mr-to
 ```
 
 ## Installation
@@ -80,10 +88,12 @@ executable as a command and provide it as `git mr-to`. You can do this with
 `make install`, optionally providing `PREFIX=<path>` to override the default
 installation prefix of `$HOME/.local`.
 
-For bash completion, source `completion.sh` from `$HOME/.bash_completion`:
+The `completion.sh` script provides Bash completion. To install, copy it to
+your completion user directory's `completions/` directory; default
+`$HOME/.local/share/bash-completion/completions/`:
 
 ```sh
-source $HOME/src/git-mr-to/completion.sh
+cp completion.sh $HOME/.local/share/bash-completion/completions/git-mr-to
 ```
 
 ## The name
