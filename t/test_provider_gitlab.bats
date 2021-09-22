@@ -7,8 +7,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://gitlab.com/namespace/project/merge_requests/new?merge_request%5Bsource_branch%5D=bar&merge_request%5Btarget_branch%5D=foo'
+    assert_success
+    assert_output 'https://gitlab.com/namespace/project/merge_requests/new?merge_request%5Bsource_branch%5D=bar&merge_request%5Btarget_branch%5D=foo'
 }
 
 @test 'GitLab HTTPS' {
@@ -16,8 +16,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://gitlab.com/namespace/project/merge_requests/new?merge_request%5Bsource_branch%5D=bar&merge_request%5Btarget_branch%5D=foo'
+    assert_success
+    assert_output 'https://gitlab.com/namespace/project/merge_requests/new?merge_request%5Bsource_branch%5D=bar&merge_request%5Btarget_branch%5D=foo'
 }
 
 @test 'GitLab HTTPS strips optional credentials-part user' {
@@ -25,8 +25,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    grep 'https://gitlab.com/' <<< "$output"
+    assert_success
+    assert_output --partial 'https://gitlab.com/'
 }
 
 @test 'GitLab inter-project' {
