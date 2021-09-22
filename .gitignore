@@ -1,2 +1,2 @@
 *.1
-bats-core/
+bats-*/

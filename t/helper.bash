@@ -42,6 +42,8 @@ init_repo()
 setup()
 {
     init_repo
+    load 'bats-support/load'
+    load 'bats-assert/load'
 }
 
 teardown()
