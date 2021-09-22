@@ -7,8 +7,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://bitbucket.org/namespace/project/pull-requests/new?source=bar&dest=foo'
+    assert_success
+    assert_output 'https://bitbucket.org/namespace/project/pull-requests/new?source=bar&dest=foo'
 }
 
 @test 'Bitbucket HTTPS' {
@@ -16,8 +16,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://bitbucket.org/namespace/project/pull-requests/new?source=bar&dest=foo'
+    assert_success
+    assert_output 'https://bitbucket.org/namespace/project/pull-requests/new?source=bar&dest=foo'
 }
 
 @test 'Bitbucket HTTPS strips optional credentials-part user' {
@@ -25,8 +25,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    grep 'https://bitbucket.org/' <<< "$output"
+    assert_success
+    assert_output --partial 'https://bitbucket.org/'
 }
 
 @test 'Bitbucket inter-project' {

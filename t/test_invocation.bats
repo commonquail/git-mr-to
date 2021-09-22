@@ -11,8 +11,8 @@ some_other_provider=bitbucket.org
 @test 'fails with usage if no remote configured' {
     run git mr-to
 
-    test "$status" -eq 1
-    grep 'usage' <<< "$output"
+    assert_failure
+    assert_output --partial 'usage'
 }
 
 @test 'uses configured remote if only one configured' {
@@ -20,7 +20,7 @@ some_other_provider=bitbucket.org
 
     run git mr-to
 
-    test "$status" -eq 0
+    assert_success
     test -n "$output"
 }
 
@@ -30,10 +30,10 @@ some_other_provider=bitbucket.org
 
     run git mr-to
 
-    test "$status" -eq 1
-    grep 'ambiguous' <<< "$output"
-    grep 'origin'    <<< "$output"
-    grep 'upstream'  <<< "$output"
+    assert_failure
+    assert_output --partial 'ambiguous'
+    assert_output --partial 'origin'
+    assert_output --partial 'upstream'
 }
 
 @test 'uses specified remote' {
@@ -42,16 +42,16 @@ some_other_provider=bitbucket.org
 
     run git mr-to john
 
-    test "$status" -eq 0
-    grep "$some_provider" <<< "$output"
-    grep -v "$some_other_provider" <<< "$output"
+    assert_success
+    assert_output --partial "$some_provider"
+    refute_output --partial "$some_other_provider"
 }
 
 @test 'fails if non-existent remote specified' {
     run git mr-to foobar
 
-    test "$status" -ne 0
-    grep 'foobar' <<< "$output"
+    assert_failure
+    assert_output --partial 'foobar'
 }
 
 @test "warns of ambiguous downstream fork if multiple remotes and no 'origin'" {
@@ -60,9 +60,9 @@ some_other_provider=bitbucket.org
 
     run git mr-to john
 
-    test "$status" -eq 0
-    grep 'ambiguous' <<< "$output"
-    grep 'could not infer downstream fork' <<< "$output"
+    assert_success
+    assert_output --partial 'ambiguous'
+    assert_output --partial 'could not infer downstream fork'
 }
 
 @test "assumes downstream fork namespace of 'origin' when merging to 'upstream'" {
@@ -71,10 +71,10 @@ some_other_provider=bitbucket.org
 
     run git mr-to upstream
 
-    test "$status" -eq 0
-    grep 'base/project' <<< "$output"
-    grep 'fork:master'  <<< "$output"
-    grep -v 'ambiguous' <<< "$output"
+    assert_success
+    assert_output --partial 'base/project'
+    assert_output --partial 'fork:master'
+    refute_output --partial 'ambiguous'
 }
 
 @test "assumes downstream fork namespace of 'origin' when merging to 'origin'" {
@@ -83,10 +83,10 @@ some_other_provider=bitbucket.org
 
     run git mr-to origin
 
-    test "$status" -eq 0
-    grep 'fork/project' <<< "$output"
-    grep 'fork:master'  <<< "$output"
-    grep -v 'ambiguous' <<< "$output"
+    assert_success
+    assert_output --partial 'fork/project'
+    assert_output --partial 'fork:master'
+    refute_output --partial 'ambiguous'
 }
 
 @test "use 'master' as destination branch, current branch as source, when specifying remote" {
@@ -96,10 +96,10 @@ some_other_provider=bitbucket.org
 
     run git mr-to origin
 
-    test "$status" -eq 0
-    grep 'namespace/project' <<< "$output"
-    grep 'compare/master' <<< "$output"
-    grep 'namespace:foo' <<< "$output"
+    assert_success
+    assert_output --partial 'namespace/project'
+    assert_output --partial 'compare/master'
+    assert_output --partial 'namespace:foo'
 }
 
 @test 'use current branch as source when specifying destination remote and branch' {
@@ -109,10 +109,10 @@ some_other_provider=bitbucket.org
 
     run git mr-to origin foo
 
-    test "$status" -eq 0
-    grep 'namespace/project' <<< "$output"
-    grep 'compare/foo' <<< "$output"
-    grep 'namespace:bar' <<< "$output"
+    assert_success
+    assert_output --partial 'namespace/project'
+    assert_output --partial 'compare/foo'
+    assert_output --partial 'namespace:bar'
 }
 
 @test 'can specify destination remote, destination branch, and source branch' {
@@ -122,8 +122,8 @@ some_other_provider=bitbucket.org
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    grep 'namespace/project' <<< "$output"
-    grep 'compare/foo' <<< "$output"
-    grep 'namespace:bar' <<< "$output"
+    assert_success
+    assert_output --partial 'namespace/project'
+    assert_output --partial 'compare/foo'
+    assert_output --partial 'namespace:bar'
 }

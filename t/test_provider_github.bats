@@ -7,8 +7,8 @@ load helper
 
     run git mr-to
 
-    test "$status" -eq 0
-    grep '?expand=1$' <<< "$output"
+    assert_success
+    assert_output --partial '?expand=1'
 }
 
 @test 'GitHub SSH' {
@@ -16,8 +16,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://github.com/namespace/project/compare/foo...namespace:bar?expand=1'
+    assert_success
+    assert_output 'https://github.com/namespace/project/compare/foo...namespace:bar?expand=1'
 }
 
 @test 'GitHub HTTPS' {
@@ -25,8 +25,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://github.com/namespace/project/compare/foo...namespace:bar?expand=1'
+    assert_success
+    assert_output 'https://github.com/namespace/project/compare/foo...namespace:bar?expand=1'
 }
 
 @test 'GitHub HTTPS strips optional credentials-part user' {
@@ -34,8 +34,8 @@ load helper
 
     run git mr-to origin foo bar
 
-    test "$status" -eq 0
-    grep 'https://github.com/' <<< "$output"
+    assert_success
+    assert_output --partial 'https://github.com/'
 }
 
 @test 'GitHub inter-project' {
@@ -44,6 +44,6 @@ load helper
 
     run git mr-to upstream foo bar
 
-    test "$status" -eq 0
-    test "$output" = 'https://github.com/base/project/compare/foo...fork:bar?expand=1'
+    assert_success
+    assert_output 'https://github.com/base/project/compare/foo...fork:bar?expand=1'
 }
