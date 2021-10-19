@@ -27,6 +27,11 @@ usage()
 #
 # It produces on standard output the complete URL with which to create a new
 # merge request.
+provider_azure_devops()
+{
+    printf '%s/pullrequestcreate?sourceRef=%s&targetRef=%s' "$1" "$2" "$3"
+}
+
 provider_bitbucket()
 {
     printf '%s/pull-requests/new?source=%s&dest=%s' "$1" "$2" "$3"
@@ -50,13 +55,42 @@ https_url_of_remote()
 
     remote_url="$(git remote get-url "$1")" || return
 
-    if [[ $remote_url = git@* ]]
+    # Assume non-HTTP protocol is SCP-like SSH URL.
+    # This is what's usually "git@..." but Azure DevOps uses another user.
+    if ! [[ $remote_url = http[s]://* ]]
     then
         # Replace SCP-syntax colon with slash
         remote_url="${remote_url/://}"
 
         # Replace optional leading git@ with https://
-        remote_url="${remote_url/#git@/https:\/\/}"
+        remote_url="https://${remote_url#*@}"
+    fi
+
+    # Legacy Azure DevOps Visual Studio clone URL? MR URL is at standard ADO
+    # domain but the standard domain doesn't work for (all?) clone URLs.
+    # Translate legacy clone URL into ADO standard form to piggy-back on
+    # standard handling.
+    if [[ $remote_url = *vs-ssh.visualstudio.com* ]]
+    then
+        remote_url="${remote_url/vs-ssh.visualstudio/ssh.dev.azure}"
+    fi
+
+    # Azure DevOps clone URL uses a very creative SSH URL structure.
+    if [[ $remote_url = *ssh.dev.azure.com*  ]]
+    then
+        # Strip leading subdomain.
+        remote_url="${remote_url/ssh./}"
+
+        # Strip version cookie in path component, assuming a clone URL version
+        # change doesn't also cause change to the MR URL.
+        remote_url="${remote_url/\/v?/}"
+
+        # The namespace component is "<user>/<project>/_git", then the
+        # repository name, joined by a slash. The HTTPS URL includes the "_git"
+        # part but the SSH URL doesn't so we have to inject it.
+        prefix="${remote_url%/*}"
+        repo_name="${remote_url##*/}"
+        remote_url="$prefix/_git/$repo_name"
     fi
 
     # Is there still a user name before the domain? Remove that.
@@ -113,6 +147,9 @@ main()
     remote_url="$(https_url_of_remote "$remote")" || exit
 
     case "$remote_url" in
+        *azure.com*)
+            provider=provider_azure_devops
+            ;;
         *gitlab*)
             provider=provider_gitlab
             ;;

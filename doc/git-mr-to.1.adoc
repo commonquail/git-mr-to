@@ -21,6 +21,7 @@ Flow_{empty}footnote:github-flow[{uri-flow}].
 *git mr-to* has varying degrees of support for, in alphabetical order, the
 following repository hosting services:
 
+* Azure DevOps
 * Bitbucket
 * GitHub
 * GitLab
@@ -51,6 +52,12 @@ _source_::
 
 Functionality depends on the repository hosting service provider. Here are all
 the supported providers and their limitations:
+
+_Azure DevOps_::
+
+    Limited to intra-project merge requests. Inter-project merge requests are
+    not supported because the URL format for this scenario uses internal
+    project IDs instead of project names.
 
 _Bitbucket_::
 
