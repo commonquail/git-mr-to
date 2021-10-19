@@ -8,6 +8,7 @@ branches are merged directly to `master`, such as the popular *GitHub Flow*
 `git mr-to` has varying degrees of support for, in alphabetical order, the
 following repository hosting services:
 
+- Azure DevOps
 - Bitbucket
 - GitHub
 - GitLab
@@ -44,6 +45,10 @@ to the current branch.
 
 `git mr-to`'s functionality depends on the repository hosting service provider.
 Here are all the supported providers and their limitations:
+
+- **Azure DevOps:** limited to intra-project merge requests. Inter-project
+  merge requests are not supported because the URL format for this scenario
+  uses internal project IDs instead of names.
 
 - **Bitbucket:** limited to intra-project merge requests. Inter-project merge
   requests are not supported because no working URL format for this scenario
